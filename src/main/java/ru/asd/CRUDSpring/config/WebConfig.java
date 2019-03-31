@@ -20,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webapp/*").addResourceLocations("/");
     }
+
     @Bean
     public InternalResourceViewResolver setupViewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -29,5 +30,4 @@ public class WebConfig implements WebMvcConfigurer {
 
         return resolver;
     }
-
 }

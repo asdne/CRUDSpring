@@ -78,4 +78,9 @@ public class PersonController {
         return "redirect:./";
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String loginUser(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
+        return "/login";
+    }
+
 }
