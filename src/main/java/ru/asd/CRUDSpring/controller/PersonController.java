@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.asd.CRUDSpring.entity.Person;
 import ru.asd.CRUDSpring.service.PersonService;
+import ru.asd.CRUDSpring.service.UserService;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,9 @@ import java.util.Map;
 public class PersonController {
     @Autowired
     PersonService personService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
     public String list(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
@@ -82,5 +86,9 @@ public class PersonController {
     public String loginUser(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
         return "/login";
     }
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String checkUser(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
 
+        return "/login";
+    }
 }

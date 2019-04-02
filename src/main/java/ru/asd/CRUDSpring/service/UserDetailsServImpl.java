@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.asd.CRUDSpring.entity.User;
-import ru.asd.CRUDSpring.entity.UserRoleEnum;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,10 +19,10 @@ public class UserDetailsServImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user= userService.getUser("fsd");
+        User user1= userService.getUser("fsd");
         Set<GrantedAuthority> roles = new HashSet<>();
-        roles.add(new SimpleGrantedAuthority(UserRoleEnum.USER.name()));
-        UserDetails userDetails= new org.springframework.security.core.userdetails.User(user.getLogin(),user.getPassword(),roles);
+        roles.add(new SimpleGrantedAuthority("USER"));
+        UserDetails userDetails= new org.springframework.security.core.userdetails.User(user1.getLogin(),user1.getPassword(),roles);
         return userDetails;
     }
 }

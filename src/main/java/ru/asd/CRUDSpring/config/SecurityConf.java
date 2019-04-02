@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import ru.asd.CRUDSpring.service.UserDetailsServImpl;
 
 @Configuration
@@ -15,7 +16,7 @@ import ru.asd.CRUDSpring.service.UserDetailsServImpl;
 public class SecurityConf extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-   //     PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        //     PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         auth.userDetailsService(getUserDetailsService());
       /*  auth.inMemoryAuthentication()
                 .withUser("asd")
@@ -49,9 +50,14 @@ auth
                 .passwordParameter("password")
                 .permitAll();
     }
+
     @Bean
     public UserDetailsService getUserDetailsService() {
         return new UserDetailsServImpl();
+    }
+    @Bean
+    public static NoOpPasswordEncoder passwordEncoder() {
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 
 //    PasswordEncoder passwordEncoder = new P;

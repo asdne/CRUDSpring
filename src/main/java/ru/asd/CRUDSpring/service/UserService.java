@@ -6,4 +6,5 @@ import ru.asd.CRUDSpring.entity.User;
 @Service
 public interface UserService {
     User getUser(String login);
+
 }
