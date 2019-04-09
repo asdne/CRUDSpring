@@ -7,11 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.asd.CRUDSpring.entity.Person;
+import ru.asd.CRUDSpring.entity.User;
+import ru.asd.CRUDSpring.entity.UserRole;
 import ru.asd.CRUDSpring.service.PersonService;
 import ru.asd.CRUDSpring.service.UserService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 
@@ -21,6 +25,7 @@ public class PersonController {
 
     @Autowired
     private UserService userService;
+
 
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
     public String list(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
@@ -86,9 +91,78 @@ public class PersonController {
     public String loginUser(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
         return "/login";
     }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String checkUser(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
 
         return "/login";
     }
+
+    @RequestMapping(value = "/userlist", method = RequestMethod.GET)
+    public String listUsers(ModelMap model) {
+        List<User> users = userService.getAll();
+
+        model.addAttribute("users", users);
+
+
+        return "/userlist";
+    }
+  /*  @RequestMapping(value="/logout", method = RequestMethod.GET)
+    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/login?logout";//You can redirect wherever you want, but generally it's a good practice to show login screen again.
+    }*/
+
+    @RequestMapping(value = "/newuser",method = RequestMethod.POST)
+    public String newUserSave(@RequestParam(name = "login") String login, @RequestParam(name = "password") String password, @RequestParam(name = "role[]") List<String> role) {
+        System.out.println("New User");
+        if (login != null) {
+            System.out.println("Создаём");
+
+            Set<String> roles = new HashSet<>();
+            for (String r : role
+            ) {
+                roles.add(r);
+            }
+            User newUser = new User(login, password);
+            userService.addUser(newUser, roles);
+        }
+        return "redirect:userlist";
+    }
+
+    @RequestMapping(value = "/newuser",method = RequestMethod.GET)
+    public String newUserForm(){
+        return "newUser";
+    }
+    @RequestMapping(value = "/deluser", method = RequestMethod.GET)
+    public String dUser(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
+        userService.deleteUserById(Long.parseLong(allRequestParams.get("id")));
+        return "redirect:/userlist";
+    }
+
+    @RequestMapping(value = "/edituser", method = RequestMethod.GET)
+    public String editUser(@RequestParam Map<String, String> allRequestParams, ModelMap model) {
+        System.out.println("EditUserPage");
+        User user = userService.getUserById(Long.parseLong(allRequestParams.get("id")));
+        model.addAttribute("user", user);
+        return "editUser";
+    }
+
+    @RequestMapping(value = "/edituser", method = RequestMethod.POST)
+    public String esUser(@RequestParam(name = "id") Long id,@RequestParam(name = "login") String login, @RequestParam(name = "password") String password, @RequestParam(name = "role[]") List<String> role, ModelMap model) {
+
+        User updateUser = new User(login, password);
+        Set<String> roles = new HashSet<>();
+        for (String r : role
+        ) {
+            roles.add(r);
+        }
+        updateUser.setId(id);
+        userService.updateUser(updateUser,roles);
+        return "redirect:/userlist";
+    }
+
 }

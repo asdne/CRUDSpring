@@ -18,13 +18,15 @@ import org.springframework.web.servlet.view.JstlView;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/webapp/*").addResourceLocations("/");
+      //  registry.addResourceHandler("/webapp/**").addResourceLocations("/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/resources/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/resources/js/");
     }
 
     @Bean
     public InternalResourceViewResolver setupViewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/");
+        resolver.setPrefix("/WEB-INF/pages/");
         resolver.setSuffix(".jsp");
         resolver.setViewClass(JstlView.class);
 

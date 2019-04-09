@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.asd.CRUDSpring.service.UserDetailsServImpl;
 
 @Configuration
@@ -41,13 +42,21 @@ auth
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").access("hasRole('USER')")
+                .antMatchers("/edit").access("hasRole('ADMIN')")
+                .antMatchers("/new").access("hasRole('ADMIN')")
+                .antMatchers("/**").access("hasAnyRole('USER','ADMIN')")
+
                 .anyRequest().authenticated()
+                .and();
+        http.logout()
+//                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
                 .and();
         http.formLogin()
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
+                .successForwardUrl("/")
                 .permitAll();
     }
 
@@ -55,6 +64,7 @@ auth
     public UserDetailsService getUserDetailsService() {
         return new UserDetailsServImpl();
     }
+
     @Bean
     public static NoOpPasswordEncoder passwordEncoder() {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
